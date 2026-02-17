@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 export default async function PollCreatedPage({ params }: { params: { id: string } }) {
   const { id } = await params;
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/poll/${id}`, { cache: "no-store" });
+  const res = await fetch(`/api/poll/${id}`, { cache: "no-store" });
   if (!res.ok) return notFound();
 
   const poll = await res.json();
