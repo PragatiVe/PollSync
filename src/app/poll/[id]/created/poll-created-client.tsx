@@ -19,7 +19,7 @@ export default function PollCreatedClient({
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}/poll/${poll.id}`);
+    navigator.clipboard.writeText(`${window.location.origin}/poll/${poll.id}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
