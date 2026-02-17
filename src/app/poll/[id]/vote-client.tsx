@@ -14,7 +14,7 @@ export default function VoteClient({ poll }: any) {
     setSubmitting(true);
     try {
       console.log("Voting for option:", selected);
-      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/poll/${poll.id}/vote`, {
+      await fetch(`/api/poll/${poll.id}/vote`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ optionId: selected }),

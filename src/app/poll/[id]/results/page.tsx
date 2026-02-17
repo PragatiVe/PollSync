@@ -10,7 +10,7 @@ async function getPoll(id: string) {
   return res.json();
 }
 
-// Server Component
+
 export default async function PollResultsPage({ params }: { params: { id: string } }) {
   const {id}  = await params; 
   const poll = await getPoll(id);
