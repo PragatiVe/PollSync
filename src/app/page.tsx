@@ -1,65 +1,100 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { FiPlus, FiRadio } from "react-icons/fi";
 
 export default function Home() {
+  const router = useRouter();
+  const [pollCode, setPollCode] = useState("");
+  const [joining, setJoining] = useState(false);
+
+  const handleJoin = async () => {
+    let code = pollCode.trim();
+    if (!code) return;
+  
+    try {
+      const url = new URL(code);
+      const pathParts = url.pathname.split("/");
+      const pollIndex = pathParts.findIndex((part) => part === "poll");
+      if (pollIndex !== -1 && pathParts[pollIndex + 1]) {
+        code = pathParts[pollIndex + 1];
+      }
+    } catch (err) {
+
+    }
+  
+    setJoining(true);
+  
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/poll/${code}`);
+      if (!res.ok) throw new Error("Poll not found");
+  
+      router.push(`/poll/${code}`);
+    } catch (err) {
+      alert("Poll not found. Please check your code or link.");
+      setJoining(false);
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-6">
+      <div className="flex flex-col md:flex-row gap-8 w-full max-w-6xl">
+        
+        {/* Create Poll */}
+        <div
+          onClick={() => router.push("/create-poll")}
+          className="flex-1 flex flex-col items-center justify-center p-10 bg-white rounded-xl shadow-lg border-2 border-transparent hover:border-indigo-600 hover:shadow-indigo-200 transition-all duration-300 cursor-pointer"
+        >
+          <FiPlus size={48} className="text-indigo-600 mb-4" />
+
+          <h2 className="text-2xl font-bold mb-2 text-gray-900">
+            Start a Poll
+          </h2>
+
+          <p className="text-gray-600 text-center mb-6">
+            Set questions, add options, and share instantly.
           </p>
+
+          <button className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition">
+            Create Poll
+          </button>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+
+        {/* Join Room */}
+        <div className="flex-1 flex flex-col items-center justify-center p-10 bg-white rounded-xl shadow-lg border-2 border-transparent hover:border-indigo-600 hover:shadow-indigo-200 transition-all duration-300">
+          
+          <FiRadio size={48} className="text-indigo-600 mb-4" />
+
+          <h2 className="text-2xl font-bold mb-2 text-gray-900">
+            Join Room
+          </h2>
+
+          <p className="text-gray-600 text-center mb-4">
+            Join a poll instantly—just enter the code or link.
+          </p>
+
+          <div className="flex gap-2 w-full max-w-xs">
+            <input
+              type="text"
+              placeholder="Enter code or paste poll link"
+              value={pollCode}
+              onChange={(e) => setPollCode(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleJoin()}
+              className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+            <button
+              onClick={handleJoin}
+              disabled={joining}
+              className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition"
+            >
+              {joining ? "Joining..." : "Join"}
+            </button>
+          </div>
         </div>
-      </main>
+
+      </div>
     </div>
   );
 }
