@@ -73,8 +73,8 @@ export default function Home() {
             Join a poll instantly—just enter the code or link.
           </p>
 
-          <div className="flex flex-col items-center w-full max-w-xs">
-            <div className="flex gap-2 w-full">
+          <div className="flex flex-col items-center w-full max-w-xs gap-2">
+            <div className="flex flex-col sm:flex-row gap-2 w-full">
               <input
                 type="text"
                 placeholder="Enter code or paste poll link"
@@ -89,13 +89,12 @@ export default function Home() {
 
               <button
                 onClick={handleJoin}
-                disabled={joining}
-                className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition"
+                disabled={joining || !pollCode.trim()}
+                className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition mt-2 sm:mt-0"
               >
                 {joining ? "Joining..." : "Join"}
               </button>
             </div>
-            {/* ⭐ error message BELOW input */}
             {error && (
               <p className="text-red-500 text-sm mt-2 w-full text-left">
                 {error}

@@ -11,10 +11,10 @@ export default function VoteClient({ poll }: any) {
   const handleVote = async () => {
     if (!selected) return;
 
-    setSubmitting(true); // start submitting
+    setSubmitting(true);
     try {
       console.log("Voting for option:", selected);
-      await fetch(`/api/poll/${poll.id}/vote`, {
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/poll/${poll.id}/vote`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ optionId: selected }),
@@ -23,7 +23,7 @@ export default function VoteClient({ poll }: any) {
       router.push(`/poll/${poll.id}/results`);
     } catch (err) {
       console.error("Vote submission failed:", err);
-      setSubmitting(false); // allow retry if failed
+      setSubmitting(false);
     }
   };
 

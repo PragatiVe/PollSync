@@ -81,6 +81,9 @@ export default function CreatePollPage() {
       if (!res.ok) throw new Error("Failed to create poll");
 
       const data = await res.json();
+      localStorage.removeItem("pollQuestion");
+      localStorage.removeItem("pollOptions");
+
       router.push(`/poll/${data.id}/created`);
     } catch (err: any) {
       setError(err.message || "Something went wrong. Please try again.");
@@ -102,7 +105,7 @@ export default function CreatePollPage() {
           placeholder="Your Question"
           value={question}
           onChange={(e) => handleQuestionChange(e.target.value)}
-          className="w-full p-3 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
+          className="block w-full p-3 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
         />
 
         {/* Options */}
@@ -123,7 +126,7 @@ export default function CreatePollPage() {
               {options.length > 2 && (
                 <button
                   onClick={() => removeOption(idx)}
-                  className="opacity-0 group-hover:opacity-100 p-3 rounded-lg bg-gray-100 hover:bg-red-50 text-gray-500 hover:text-red-600 transition"
+                  className="p-3 rounded-lg bg-gray-100 hover:bg-red-50 text-gray-500 hover:text-red-600 transition w-full sm:w-auto"
                 >
                   <FiTrash2 size={18} />
                 </button>
