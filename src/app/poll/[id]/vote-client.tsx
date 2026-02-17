@@ -1,12 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { useRouter } from "next/navigation";
 
 export default function VoteClient({ poll }: any) {
   const [selected, setSelected] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hasVoted = localStorage.getItem(`voted_${poll.id}`);
+      if (hasVoted) {
+        router.replace(`/poll/${poll.id}/results`);
+      }
+    }
+  }, [poll.id, router]);
 
   const handleVote = async () => {
     if (!selected) return;
@@ -20,6 +29,10 @@ export default function VoteClient({ poll }: any) {
         body: JSON.stringify({ optionId: selected }),
       });
 
+      if (typeof window !== "undefined") {
+        localStorage.setItem(`voted_${poll.id}`, "true");
+      }
+      
       router.push(`/poll/${poll.id}/results`);
     } catch (err) {
       console.error("Vote submission failed:", err);

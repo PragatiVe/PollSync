@@ -20,7 +20,6 @@ export default function PollCreatedClient({
   const [copied, setCopied] = useState(false);
   const router = useRouter();
 
-  // Guard window for SSR
   const origin = typeof window !== "undefined" ? window.location.origin : "";
 
   const handleCopy = () => {
