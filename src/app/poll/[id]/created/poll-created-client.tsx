@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FiCopy } from "react-icons/fi";
+import { useRouter } from "next/navigation";
 
 interface PollCreatedClientProps {
   poll: {
@@ -17,9 +18,13 @@ export default function PollCreatedClient({
   showVoteButton = false,
 }: PollCreatedClientProps) {
   const [copied, setCopied] = useState(false);
+  const router = useRouter();
+
+  // Guard window for SSR
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(`${window.location.origin}/poll/${poll.id}`);
+    navigator.clipboard.writeText(`${origin}/poll/${poll.id}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
@@ -29,7 +34,7 @@ export default function PollCreatedClient({
       {/* Poll Question */}
       <p className="text-lg font-semibold text-gray-900">{poll.question}</p>
 
-      {/* Options (no votes) */}
+      {/* Options (no votes yet) */}
       <div className="space-y-2">
         {poll.options.map((opt) => (
           <div
@@ -45,7 +50,7 @@ export default function PollCreatedClient({
       <div className="flex gap-2 mt-4">
         <input
           type="text"
-          value={`${window.location.origin}/poll/${poll.id}`}
+          value={`${origin}/poll/${poll.id}`}
           readOnly
           className="flex-1 p-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none"
         />
@@ -62,13 +67,13 @@ export default function PollCreatedClient({
         <div className="flex gap-2 mt-4">
           <button
             className="flex-1 bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition"
-            onClick={() => (window.location.href = `/poll/${poll.id}`)}
+            onClick={() => router.push(`/poll/${poll.id}`)}
           >
             Vote Now
           </button>
           <button
             className="flex-1 bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition"
-            onClick={() => (window.location.href = `/poll/${poll.id}/results`)}
+            onClick={() => router.push(`/poll/${poll.id}/results`)}
           >
             View Analytics
           </button>
