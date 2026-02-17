@@ -8,7 +8,7 @@ export async function GET(
   try {
     const { id } = await params; 
 
-    const poll = await prisma.poll.findUnique({
+    const poll = await prisma.polls.findUnique({
       where: { id },
       include: { options: true },
     });

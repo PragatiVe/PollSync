@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const poll = await prisma.poll.create({
+    const poll = await prisma.polls.create({
       data: {
         question,
         options: {

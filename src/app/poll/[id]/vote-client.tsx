@@ -13,6 +13,7 @@ export default function VoteClient({ poll }: any) {
 
     setSubmitting(true); // start submitting
     try {
+      console.log("Voting for option:", selected);
       await fetch(`/api/poll/${poll.id}/vote`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
