@@ -28,7 +28,7 @@ export default function Home() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/poll/${code}`
+        `/api/poll/${code}`
       );
       if (!res.ok) throw new Error("Poll not found");
 
